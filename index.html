@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>B2B Delivery Tracker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-container">
+        <div class="login-card">
+            <h1>B2B Delivery Tracker</h1>
+            <form id="login-form">
+                <div class="form-group">
+                    <label class="form-label" for="email">Email</label>
+                    <input type="email" id="email" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" id="password" class="form-control" required>
+                </div>
+                <button type="submit" class="btn btn--primary btn--full-width">Login</button>
+                <div id="login-error" class="error-message hidden"></div>
+            </form>
+            <div class="demo-credentials">
+                <h4>Demo Credentials:</h4>
+                <p><strong>Admin:</strong> admin@petshop.com / admin123</p>
+                <p><strong>Driver:</strong> john@delivery.com / driver123</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="dashboard hidden">
+        <!-- Navigation -->
+        <nav class="nav-bar">
+            <div class="nav-brand">
+                <h2>B2B Delivery Tracker</h2>
+            </div>
+            <div class="nav-actions">
+                <span class="user-info">Welcome, <span id="user-name"></span></span>
+                <button id="logout-btn" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </nav>
+
+        <!-- Sidebar Navigation -->
+        <div class="main-layout">
+            <aside class="sidebar">
+                <ul class="nav-menu">
+                    <li><button class="nav-item active" data-view="overview">Dashboard</button></li>
+                    <li><button class="nav-item" data-view="dealers">Dealers</button></li>
+                    <li><button class="nav-item" data-view="products">Products</button></li>
+                    <li><button class="nav-item" data-view="deliveries">Deliveries</button></li>
+                    <li><button class="nav-item" data-view="add-delivery">Add Delivery</button></li>
+                </ul>
+            </aside>
+
+            <!-- Main Content Area -->
+            <main class="content">
+                <!-- Overview Dashboard -->
+                <div id="overview-view" class="view-content">
+                    <h1>Dashboard Overview</h1>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="total-dealers">0</h3>
+                            <p>Total Dealers</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="pending-deliveries">0</h3>
+                            <p>Pending Deliveries</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="completed-today">0</h3>
+                            <p>Completed Today</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="total-revenue">₹0</h3>
+                            <p>Total Revenue</p>
+                        </div>
+                    </div>
+                    <div class="recent-deliveries">
+                        <h2>Recent Deliveries</h2>
+                        <div id="recent-deliveries-list"></div>
+                    </div>
+                </div>
+
+                <!-- Dealers Management -->
+                <div id="dealers-view" class="view-content hidden">
+                    <div class="view-header">
+                        <h1>Dealers Management</h1>
+                        <button id="add-dealer-btn" class="btn btn--primary">Add Dealer</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Address</th>
+                                    <th>Phone</th>
+                                    <th>Date Added</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="dealers-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Products Management -->
+                <div id="products-view" class="view-content hidden">
+                    <div class="view-header">
+                        <h1>Products Management</h1>
+                        <button id="add-product-btn" class="btn btn--primary">Add Product</button>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Category</th>
+                                    <th>Default Price</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="products-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Deliveries Management -->
+                <div id="deliveries-view" class="view-content hidden">
+                    <div class="view-header">
+                        <h1>Delivery History</h1>
+                        <div class="filters">
+                            <input type="text" id="delivery-search" placeholder="Search deliveries..." class="form-control">
+                            <select id="status-filter" class="form-control">
+                                <option value="">All Status</option>
+                                <option value="pending">Pending</option>
+                                <option value="in-progress">In Progress</option>
+                                <option value="delivered">Delivered</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="table-container">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Dealer</th>
+                                    <th>Products</th>
+                                    <th>Price</th>
+                                    <th>Date</th>
+                                    <th>Status</th>
+                                    <th>Assigned To</th>
+                                </tr>
+                            </thead>
+                            <tbody id="deliveries-table-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Add Delivery Form -->
+                <div id="add-delivery-view" class="view-content hidden">
+                    <h1>Add New Delivery</h1>
+                    <form id="add-delivery-form" class="form-layout">
+                        <div class="form-group">
+                            <label class="form-label" for="delivery-dealer">Select Dealer</label>
+                            <select id="delivery-dealer" class="form-control" required>
+                                <option value="">Choose dealer...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="delivery-products">Select Products</label>
+                            <div id="products-selection"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="agreed-price">Agreed Price (₹)</label>
+                            <input type="number" id="agreed-price" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="delivery-address">Delivery Address</label>
+                            <textarea id="delivery-address" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="delivery-date">Delivery Date</label>
+                            <input type="date" id="delivery-date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="assigned-driver">Assign Driver</label>
+                            <select id="assigned-driver" class="form-control" required>
+                                <option value="">Choose driver...</option>
+                            </select>
+                        </div>
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn--primary">Create Delivery</button>
+                            <button type="button" id="cancel-delivery" class="btn btn--outline">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Driver Dashboard -->
+    <div id="driver-dashboard" class="driver-view hidden">
+        <nav class="mobile-nav">
+            <h2>Delivery App</h2>
+            <div class="nav-actions">
+                <span class="driver-name">Hello, <span id="driver-name"></span></span>
+                <button id="driver-logout-btn" class="btn btn--outline btn--sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="driver-content">
+            <div class="delivery-filters">
+                <button class="filter-btn active" data-filter="today">Today</button>
+                <button class="filter-btn" data-filter="pending">Pending</button>
+                <button class="filter-btn" data-filter="all">All</button>
+            </div>
+            
+            <div id="driver-deliveries" class="deliveries-list"></div>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="dealer-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="dealer-modal-title">Add Dealer</h2>
+            <form id="dealer-form">
+                <div class="form-group">
+                    <label class="form-label" for="dealer-name">Name</label>
+                    <input type="text" id="dealer-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dealer-address">Address</label>
+                    <textarea id="dealer-address" class="form-control" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="dealer-phone">Phone</label>
+                    <input type="tel" id="dealer-phone" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">Save</button>
+                    <button type="button" class="close-modal btn btn--outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="product-modal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="product-modal-title">Add Product</h2>
+            <form id="product-form">
+                <div class="form-group">
+                    <label class="form-label" for="product-name">Name</label>
+                    <input type="text" id="product-name" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="product-category">Category</label>
+                    <select id="product-category" class="form-control" required>
+                        <option value="">Choose category...</option>
+                        <option value="Medicine">Medicine</option>
+                        <option value="Food">Food</option>
+                        <option value="Accessories">Accessories</option>
+                        <option value="Grooming">Grooming</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="product-price">Default Price (₹)</label>
+                    <input type="number" id="product-price" class="form-control" required>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn--primary">Save</button>
+                    <button type="button" class="close-modal btn btn--outline">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
